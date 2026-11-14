@@ -1,4 +1,4 @@
- name: Build APK from ZIP
+name: Build APK from ZIP
 
 on:
   workflow_dispatch:
@@ -27,14 +27,12 @@ jobs:
           echo "Found: $ZIP"
           mkdir -p work
           unzip -q "$ZIP" -d work
-          # if zip contains a single top-level folder, descend into it
           ROOT=work
           COUNT=$(ls -A work | wc -l)
           if [ "$COUNT" -eq 1 ] && [ -d "work/$(ls -A work)" ]; then
             ROOT="work/$(ls -A work)"
           fi
           echo "Project root: $ROOT"
-          # sanity: must have settings.gradle or build.gradle
           if ! ls "$ROOT"/settings.gradle* "$ROOT"/build.gradle* >/dev/null 2>&1; then
             echo "No gradle files in $ROOT"; find "$ROOT" -maxdepth 2 -type f | head -50; exit 1
           fi
